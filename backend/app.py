@@ -31,6 +31,20 @@ def init_db():
 def get_db():
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
+    # 確保表格存在
+    c = conn.cursor()
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS scores (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            player_name TEXT NOT NULL,
+            mode TEXT NOT NULL,
+            difficulty TEXT NOT NULL,
+            score INTEGER NOT NULL,
+            total_chars INTEGER NOT NULL,
+            date TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
     return conn
 
 # API: 提交分數
@@ -192,4 +206,11 @@ if __name__ == '__main__':
     init_db()
     print("資料庫初始化完成")
     print("伺服器啟動在 http://localhost:5000")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    
+    # 從環境變數獲取 PORT，Render 會自動設定
+    port = int(os.environ.get('PORT', 5000))
+    
+    # 在生產環境使用 gunicorn，本地開發使用 Flask 內建伺服器
+    debug_mode = os.environ.get('FLASK_ENV') != 'production'
+    
+    app.run(debug=debug_mode, host='0.0.0.0', port=port)
