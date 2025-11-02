@@ -1,5 +1,5 @@
 // API配置
-const API_URL = 'https://typing-game-backend-xxxx.onrender.com/api';
+const API_URL = 'https://typing-game-online.onrender.com/api';
 
 // 遊戲狀態
 const gameState = {
@@ -691,3 +691,4 @@ function getDifficultyFilterName(difficulty) {
 // 頁面載入時初始化
 
 document.addEventListener('DOMContentLoaded', init);
+
